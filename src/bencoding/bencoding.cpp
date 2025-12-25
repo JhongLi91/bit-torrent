@@ -4,40 +4,9 @@
 
 namespace bencoding {
 
-// private helper function
-namespace {
-ll get_number(std::string_view data, size_t start, size_t end) {
-    ll n = 0;
-    for (; start < end; start++) {
-        n *= 10;
-        n += data[start] - '0';
-    }
-    return n;
-}
-} // namespace
-
+// - private helpers
+ll get_number(std::string_view data, size_t start, size_t end);
 Bitem decode(std::string_view data, size_t &pos);
-long long decode_int(std::string_view data, size_t &pos);
-std::string decode_string(std::string_view data, size_t &pos);
-std::vector<Bitem> decode_list(std::string_view data, size_t &pos);
-std::map<std::string, Bitem> decode_dict(std::string_view data, size_t &pos);
-
-Bitem decode(std::string_view data, size_t &pos) {
-    if (pos >= data.size())
-        throw std::runtime_error("Unexpected end of data");
-
-    char curr = data[pos];
-    if (curr == 'i')
-        return decode_int(data, pos);
-    else if (curr == 'l')
-        return decode_list(data, pos);
-    else if (curr == 'd')
-        return decode_dict(data, pos);
-    else if (isdigit(curr))
-        return decode_string(data, pos);
-
-    throw std::runtime_error("Unknown type identifier");
-}
 
 // Format: i<number>e  (e.g., i42e, i-3e)
 ll decode_int(std::string_view data, size_t &pos) {
@@ -103,6 +72,38 @@ std::map<std::string, Bitem> decode_dict(std::string_view data, size_t &pos) {
 
     pos++; // Consume 'e'
     return res;
+}
+
+Bitem decode(std::string_view data, size_t &pos) {
+    if (pos >= data.size())
+        throw std::runtime_error("Unexpected end of data");
+
+    char curr = data[pos];
+    if (curr == 'i')
+        return decode_int(data, pos);
+    else if (curr == 'l')
+        return decode_list(data, pos);
+    else if (curr == 'd')
+        return decode_dict(data, pos);
+    else if (isdigit(curr))
+        return decode_string(data, pos);
+
+    throw std::runtime_error("Unknown type identifier");
+}
+
+ll get_number(std::string_view data, size_t start, size_t end) {
+    ll n = 0;
+    for (; start < end; start++) {
+        n *= 10;
+        n += data[start] - '0';
+    }
+    return n;
+}
+
+// - public interface
+Bitem decode(std::string_view data) {
+    size_t pos = 0;
+    return decode(data, pos);
 }
 
 } // namespace bencoding

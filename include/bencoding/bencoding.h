@@ -36,6 +36,6 @@ struct Bitem {
 };
 
 // public interfaces
-Bitem decode(std::string_view data, size_t &pos);
+Bitem decode(std::string_view data);
 
 }; // namespace bencoding
