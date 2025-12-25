@@ -1,17 +1,22 @@
-cmake_minimum_required(VERSION 3.15)
-project(BitTorrent VERSION 0.1 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
+project(BitTorrent)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_library(lib
-    src/bencoding.cpp
+# Common output directories
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
+add_library(core_lib
+    src/parser/bencoding.cpp
 )
 
-target_include_directories(lib PUBLIC include)
+target_include_directories(core_lib PUBLIC include)
 
 add_executable(bit_torrent src/main.cpp)
-target_link_libraries(bit_torrent PRIVATE lib)
+target_link_libraries(bit_torrent PRIVATE core_lib)
 
+# tests
 enable_testing()
 add_subdirectory(tests)
