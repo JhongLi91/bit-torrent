@@ -39,7 +39,7 @@ std::string decode_string(std::string_view data, size_t &pos) {
         throw std::runtime_error("String length out of bounds");
     }
 
-    std::string res(data.substr(pos, len));
+    std::string res(&data[pos], len);
     pos += len;
 
     return res;
@@ -104,6 +104,38 @@ ll get_number(std::string_view data, size_t start, size_t end) {
 Bitem decode(std::string_view data) {
     size_t pos = 0;
     return decode(data, pos);
+}
+
+template <class... Ts> struct overloaded : Ts... {
+    using Ts::operator()...;
+};
+template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+std::string encode(const Bitem &bitem) {
+    return std::visit(
+        overloaded{// Integer: i<number>e
+                   [](long long n) { return "i" + std::to_string(n) + "e"; },
+                   // String: <len>:<string>
+                   [](const std::string &s) { return std::to_string(s.size()) + ":" + s; },
+                   // List: l<item><item>...e
+                   [](const std::vector<Bitem> &vec) {
+                       std::string res = "l";
+                       for (const auto &item : vec) {
+                           res += encode(item);
+                       }
+                       res += "e";
+                       return res;
+                   },
+                   // Dictionary: d<key><val>...e
+                   [](const std::map<std::string, Bitem> &mp) {
+                       std::string res = "d";
+                       for (const auto &[key, val] : mp) {
+                           res += std::to_string(key.size()) + ":" + key;
+                           res += encode(val);
+                       }
+                       res += "e";
+                       return res;
+                   }},
+        bitem.val);
 }
 
 } // namespace bencoding
