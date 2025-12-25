@@ -1,8 +1,8 @@
-#include "parser/bencoding.h"
+#include "bencoding/bencoding.h"
 #include <cctype>
 #include <stdexcept>
 
-namespace parser {
+namespace bencoding {
 
 // private helper function
 namespace {
@@ -105,4 +105,4 @@ std::map<std::string, Bitem> decode_dict(std::string_view data, size_t &pos) {
     return res;
 }
 
-} // namespace parser
+} // namespace bencoding

@@ -1,4 +1,4 @@
-#include "parser/bencoding.h"
+#include "bencoding/bencoding.h"
 #include <cassert>
 #include <iostream>
 #include <map>
@@ -6,24 +6,24 @@
 #include <vector>
 
 // Helper to easily access variants in tests
-template <typename T> const T &get(const parser::Bitem &item) { return std::get<T>(item.val); }
+template <typename T> const T &get(const bencoding::Bitem &item) { return std::get<T>(item.val); }
 
 void test_integers() {
     std::cout << "Testing Integers... ";
     size_t pos = 0;
 
     // Positive
-    auto res1 = parser::decode("i42e", pos);
+    auto res1 = bencoding::decode("i42e", pos);
     assert(get<long long>(res1) == 42);
 
     // Negative
     pos = 0;
-    auto res2 = parser::decode("i-100e", pos);
+    auto res2 = bencoding::decode("i-100e", pos);
     assert(get<long long>(res2) == -100);
 
     // Zero
     pos = 0;
-    auto res3 = parser::decode("i0e", pos);
+    auto res3 = bencoding::decode("i0e", pos);
     assert(get<long long>(res3) == 0);
 
     std::cout << "OK\n";
@@ -34,12 +34,12 @@ void test_strings() {
     size_t pos = 0;
 
     // Standard
-    auto res1 = parser::decode("4:spam", pos);
+    auto res1 = bencoding::decode("4:spam", pos);
     assert(get<std::string>(res1) == "spam");
 
     // Empty
     pos = 0;
-    auto res2 = parser::decode("0:", pos);
+    auto res2 = bencoding::decode("0:", pos);
     assert(get<std::string>(res2) == "");
 
     // Binary safe (null byte inside)
@@ -56,8 +56,8 @@ void test_lists() {
     size_t pos = 0;
 
     // l 4:spam i42e e
-    auto res = parser::decode("l4:spami42ee", pos);
-    const auto &list = get<std::vector<parser::Bitem>>(res);
+    auto res = bencoding::decode("l4:spami42ee", pos);
+    const auto &list = get<std::vector<bencoding::Bitem>>(res);
 
     assert(list.size() == 2);
     assert(get<std::string>(list[0]) == "spam");
@@ -72,8 +72,8 @@ void test_dictionaries() {
 
     // d 3:bar 4:spam 3:foo i42e e
     // Keys must be sorted: bar comes before foo
-    auto res = parser::decode("d3:bar4:spam3:fooi42ee", pos);
-    const auto &map = get<std::map<std::string, parser::Bitem>>(res);
+    auto res = bencoding::decode("d3:bar4:spam3:fooi42ee", pos);
+    const auto &map = get<std::map<std::string, bencoding::Bitem>>(res);
 
     assert(map.size() == 2);
     assert(get<std::string>(map.at("bar")) == "spam");
@@ -90,13 +90,13 @@ void test_nested_complex() {
     // { "announce": "http://tracker", "info": { "length": 1000 } }
     std::string mock = "d8:announce14:http://tracker4:infod6:lengthi1000eee";
 
-    auto res = parser::decode(mock, pos);
-    const auto &root = get<std::map<std::string, parser::Bitem>>(res);
+    auto res = bencoding::decode(mock, pos);
+    const auto &root = get<std::map<std::string, bencoding::Bitem>>(res);
 
     assert(get<std::string>(root.at("announce")) == "http://tracker");
 
     // Check nested info dict
-    const auto &info = get<std::map<std::string, parser::Bitem>>(root.at("info"));
+    const auto &info = get<std::map<std::string, bencoding::Bitem>>(root.at("info"));
     assert(get<long long>(info.at("length")) == 1000);
 
     std::cout << "OK\n";

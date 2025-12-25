@@ -1,15 +1,15 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <string_view>
-#include <map>
 #include <utility>
 #include <variant>
 #include <vector>
 
 using ll = long long;
 
-namespace parser {
+namespace bencoding {
 
 struct Bitem;
 
@@ -38,4 +38,4 @@ struct Bitem {
 // public interfaces
 Bitem decode(std::string_view data, size_t &pos);
 
-}; // namespace parser
+}; // namespace bencoding
