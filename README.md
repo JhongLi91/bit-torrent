@@ -1,4 +1,4 @@
-# bit-torrent
+# Bit Torrent
 This is a recreation of BitTorrent version 1.0, a project intended for personal learning.
 The goal of this project is to help me learn more about distributed systems and 
 and other infrastructure programming in C++ like networking and concurrency. 
