@@ -1,4 +1,4 @@
-#include "bencoding/bencoding.h"
+#include "parsing/bencoding.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -37,10 +37,10 @@ int main() {
         std::string data = loadFile(path);
 
         // 2. Decode
-        auto root = bencoding::decode(data);
+        auto root = parsing::bencoding::decode(data);
 
         // 3. Extract Info Dictionary
-        auto &rootMap = std::get<std::map<std::string, bencoding::Bitem>>(root.val);
+        auto &rootMap = std::get<std::map<std::string, parsing::bencoding::Bitem>>(root.val);
 
         if (rootMap.find("info") == rootMap.end()) {
             std::cerr << "Error: Invalid torrent file (no info dictionary)\n";
@@ -50,7 +50,7 @@ int main() {
         const auto &infoNode = rootMap.at("info");
 
         // 4. Encode Info Dictionary back to bytes
-        std::string infoBytes = bencoding::encode(infoNode);
+        std::string infoBytes = parsing::bencoding::encode(infoNode);
 
         // 5. Hash it
         std::string hash = sha1(infoBytes);
