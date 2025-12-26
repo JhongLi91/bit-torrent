@@ -5,8 +5,11 @@ and other infrastructure programming in C++ like networking and concurrency.
 
 I followed this [wiki](https://wiki.theory.org/BitTorrentSpecification) as project spec.
 
+Handshake Protocol Format
+![handshake img](https://recurse.henrystanley.com/img/bittorrent_handshake.jpg "Handshake Protocol")
+
 # Scope
-This application applies to the first version (i.e. version 1.0) of the BitTorrent protocol specification:
+This is the version 1.0 of the BitTorrent protocol specification which includes:
 - Bencoding
 - Torrent file structure
 - Peer wire protocol
