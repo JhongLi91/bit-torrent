@@ -1,5 +1,5 @@
 # Bit Torrent
-This is a recreation of BitTorrent version 1.0, a project intended for personal learning.
+This is a re-creation of BitTorrent v1.0, a project intended for personal learning.
 The goal of this project is to help me learn more about distributed systems and 
 and other infrastructure programming in C++ like networking and concurrency. 
 
@@ -9,24 +9,27 @@ Handshake Protocol Format
 ![handshake img](assets/handshake_protocol.png "Handshake Protocol")
 
 # Scope
-This is the version 1.0 of the BitTorrent protocol specification which includes:
+The version 1.0 of the BitTorrent protocol specification includes:
 - Bencoding
 - Torrent file structure
 - Peer wire protocol
 - Tracker HTTP/HTTPS protocol
+- Kqueue for event polling (not part of BitTorrent)
 
 # Project Requirements
-- C++ 20
-- Cmake
+- MacOs (for kqueue)
+- C++20
+- CMake
 
-# How to build the app
+# How to Build and Run
 - mkdir build
 - cd build
 - cmake ..
 - make -j 8
+- ./bin/bit_torrent <path to .torrent_file>
 
-# How to run
-- TODO
+# Testing
+- ctest
 
 # Demo
 - TODO
