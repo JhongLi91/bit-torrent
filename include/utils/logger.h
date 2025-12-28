@@ -1,0 +1,98 @@
+#pragma once
+#include <print>
+#include <string.h>
+
+// log levels
+#define LOG_LEVEL_ERROR 0
+#define LOG_LEVEL_INFO 1
+#define LOG_LEVEL_DEBUG 2
+#define LOG_LEVEL_TRACE 3
+
+#ifdef DEBUG
+#define LOG_LEVEL 2
+#else
+#define LOG_LEVEL 0
+#endif
+
+// colors
+#define LOG_COLOR_RESET "\033[0m"
+#define LOG_COLOR_GRAY "\033[90m"
+#define LOG_COLOR_CYAN "\033[36m"
+#define LOG_COLOR_GREEN "\033[32m"
+#define LOG_COLOR_RED "\033[31m"
+
+// HELPERS
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+
+#define LOG(prefix, color, fmt, ...)                                                               \
+    std::println("{}[{}]{} [{} {}:{}]: " fmt, color, prefix, LOG_COLOR_RESET, __FILENAME__,        \
+                 __func__, __LINE__ __VA_OPT__(, )##__VA_ARGS__)
+
+// log ../macros
+#if LOG_LEVEL >= LOG_LEVEL_ERROR
+#define LOG_ERROR(fmt, ...) LOG("ERROR", LOG_COLOR_RED, fmt, ##__VA_ARGS__)
+#else
+#define LOG_ERROR(fmt, ...) ((void)0)
+#endif
+
+#if LOG_LEVEL >= LOG_LEVEL_INFO
+#define LOG_INFO(fmt, ...) LOG("INFO ", LOG_COLOR_GREEN, fmt, ##__VA_ARGS__)
+#else
+#define LOG_INFO(fmt, ...) ((void)0)
+#endif
+
+#if LOG_LEVEL >= LOG_LEVEL_DEBUG
+#define LOG_DEBUG(fmt, ...) LOG("DEBUG", LOG_COLOR_CYAN, fmt, ##__VA_ARGS__)
+#else
+#define LOG_DEBUG(fmt, ...) ((void)0)
+#endif
+
+#if LOG_LEVEL >= LOG_LEVEL_TRACE
+#define LOG_TRACE(fmt, ...) LOG("TRACE", LOG_COLOR_GRAY, fmt, ##__VA_ARGS__)
+#else
+#define LOG_TRACE(fmt, ...) ((void)0)
+#endif
+
+#ifdef DEBUG
+#define ASSERT(cond)                                                                               \
+    do {                                                                                           \
+        if (!(cond)) {                                                                             \
+            LOG_ERROR("Assertion failed: {}", #cond);                                              \
+            std::abort();                                                                          \
+        }                                                                                          \
+    } while (0);
+#else
+#define ASSERT(cond) ((void)sizeof(cond))
+// clang-format off
+#define ASSERT(cond) ((void)sizeof(cond))
+// clang-format on
+#endif
+#ifdef DEBUG
+#define ASSERT_MSG(cond, format, ...)                                                              \
+    do {                                                                                           \
+        if (!(cond)) {                                                                             \
+            LOG_ERROR("Assertion failed: {} | " format, #cond __VA_OPT__(, ) __VA_ARGS__);         \
+            std::abort();                                                                          \
+        }                                                                                          \
+    } while (0);
+#else
+// clang-format off
+#define ASSERT_MSG(cond, format, ...) ((void)sizeof(cond))
+// clang-format on
+#endif
+
+#ifdef DEBUG
+#define ASSERT_EQUAL(actual, expected)                                                             \
+    do {                                                                                           \
+        if (!((actual) == (expected))) {                                                           \
+            LOG_ERROR("Assertion failed: {} == {}", #actual, #expected);                           \
+            std::print("  Actual:  {}\n", (actual));                                               \
+            std::print("  Expected:  {}\n", (expected));                                           \
+            std::abort();                                                                          \
+        }                                                                                          \
+    } while (0)
+#else
+// clang-format off
+#define ASSERT_EQUAL(actual, expected) ((void)sizeof(actual),(void)sizeof(expected))
+// clang-format on
+#endif
