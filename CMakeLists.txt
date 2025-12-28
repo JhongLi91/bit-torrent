@@ -8,14 +8,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Common output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+find_package(Boost REQUIRED thread)
+
 add_library(core_lib
     src/parsing/bencoding.cpp
 )
+add_library(boost INTERFACE)
 
+target_include_directories(boost INTERFACE ${Boost_INCLUDE_DIRS})
 target_include_directories(core_lib PUBLIC include)
 
 add_executable(bit_torrent src/main.cpp)
-target_link_libraries(bit_torrent PRIVATE core_lib)
+target_link_libraries(bit_torrent PRIVATE core_lib boost)
 
 
 # copy assets to build
