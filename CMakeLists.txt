@@ -8,19 +8,32 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Common output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+include(FetchContent)
 find_package(Boost REQUIRED thread)
+find_package(spdlog QUIET)
+if(NOT spdlog_FOUND)
+  message(STATUS "Fetching spdlog")
+  FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.14.1)
+  FetchContent_MakeAvailable(spdlog)
+endif()
 
+# add to core_lib
 add_library(core_lib
     src/parsing/bencoding.cpp
+    src/parsing/torrent.cpp
 )
 add_library(boost INTERFACE)
 
 target_include_directories(boost INTERFACE ${Boost_INCLUDE_DIRS})
 target_include_directories(core_lib PUBLIC include)
 
-add_executable(bit_torrent src/main.cpp)
-target_link_libraries(bit_torrent PRIVATE core_lib boost)
+target_link_libraries(core_lib PUBLIC spdlog::spdlog)
 
+add_executable(bit_torrent src/main.cpp)
+target_link_libraries(bit_torrent PRIVATE core_lib)
 
 # copy assets to build
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
