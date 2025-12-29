@@ -24,6 +24,7 @@ endif()
 add_library(core_lib
     src/parsing/bencoding.cpp
     src/parsing/torrent.cpp
+    src/parsing/buffer.cpp
 )
 add_library(boost INTERFACE)
 
