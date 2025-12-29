@@ -5,6 +5,7 @@
 #include <fstream>
 #include <spdlog/spdlog.h>
 #include <sstream>
+#include <utility>
 
 torrent::torrent(const std::string &path) {
     // load torrent file
@@ -35,6 +36,23 @@ torrent::torrent(const std::string &path) {
 bool torrent::verify_piece(const std::string &hash, uint32_t piece_idx) {
     return hash == pieces.substr(piece_idx * HASH_LENGTH, HASH_LENGTH);
 }
+
+std::pair<std::string, uint16_t> torrent::get_hostname_and_port() {
+    std::string http = "http://";
+
+    size_t start = http.size() + 1;
+    auto end = announce_url.find("/", start);
+    auto colon = announce_url.find(":", start);
+
+    if (colon == std::string::npos) {
+        std::string hostname = announce_url.substr(start, end - start);
+        return {hostname, 80};
+    }
+
+    std::string hostname = announce_url.substr(start, colon - start);
+    uint16_t port = stoi(announce_url.substr(colon + 1, end - colon - 1));
+    return {hostname, port};
+};
 
 // Private
 std::string torrent::loadFile(const std::string &path) {

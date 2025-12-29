@@ -19,6 +19,16 @@ int main() {
     assert(torr.file_name == "ubuntu-24.04.1-live-server-amd64.iso");
     assert(torr.piece_length == 262144);
 
+    auto hostname_and_port = torr.get_hostname_and_port();
+    assert(hostname_and_port.first == "torrent.ubuntu.com");
+    assert(hostname_and_port.second == 80);
+
+    // testing port parsing
+    torr.announce_url = "https://torrent.ubuntu.com:6969/announce";
+    hostname_and_port = torr.get_hostname_and_port();
+    assert(hostname_and_port.first == "torrent.ubuntu.com");
+    assert(hostname_and_port.second == 6969);
+
     std::cout << "Good\n";
 
     return 0;
