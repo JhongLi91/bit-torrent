@@ -5,8 +5,6 @@ programming in C++ like networking and concurrency.
 
 I followed this [wiki](https://wiki.theory.org/BitTorrentSpecification) as project spec.
 
-![handshake img](assets/handshake_protocol.png "Handshake Protocol")
-
 # Scope
 The version 1.0 of the BitTorrent protocol specification includes:
 - Bencoding
@@ -14,6 +12,10 @@ The version 1.0 of the BitTorrent protocol specification includes:
 - Peer wire protocol
 - Tracker HTTP/HTTPS protocol
 - Kqueue for event polling (not part of BitTorrent)
+
+# Protocol
+Handshake
+![handshake_protocol](assets/handshake_protocol.png "Handshake Protocol")
 
 # Project Requirements
 - MacOs (for kqueue)
@@ -30,7 +32,11 @@ make -j 8
 ```
 
 # Testing
-`ctest`
+```
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make -j 8
+ctest
+```
 
 # Demo
 - TODO
