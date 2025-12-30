@@ -8,6 +8,7 @@ const size_t MAX_BUF_SIZE = 1500;
 class tcp {
   public:
     tcp(const std::string &ip_address, uint16_t port);
+    ~tcp();
     int setup(std::string &ip, uint16_t port);
 
     int send_all(buffer_t &msg);

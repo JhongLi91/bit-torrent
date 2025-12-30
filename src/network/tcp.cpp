@@ -3,13 +3,17 @@
 #include "parsing/buffer.h"
 #include "spdlog/spdlog.h"
 #include <cstdint>
+#include <spdlog/fmt/bin_to_hex.h>
 #include <string>
 #include <sys/socket.h>
+#include <unistd.h>
 
 tcp::tcp(const std::string &ip_address, uint16_t port) {
     buf.resize(MAX_BUF_SIZE);
     sockfd = make_client_socket(ip_address, port, true);
 }
+
+tcp::~tcp() { close(sockfd); }
 
 int tcp::send_all(buffer_t &msg) {
     size_t sent = 0;
@@ -19,7 +23,8 @@ int tcp::send_all(buffer_t &msg) {
             return -1;
         sent += n;
     }
-    return 0;
+    spdlog::debug("Msg sent: {:X}", spdlog::to_hex(msg));
+    return sent;
 }
 
 buffer_t tcp::receive_n(uint32_t n) {
@@ -41,5 +46,7 @@ buffer_t tcp::receive_n(uint32_t n) {
         }
         received += rv;
     }
-    return buffer_t(buf.data(), buf.data() + received);
+    buffer_t res(buf.data(), buf.data() + received);
+    spdlog::debug("Msg received: {:X}", spdlog::to_hex(res));
+    return res;
 }

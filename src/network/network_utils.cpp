@@ -98,6 +98,6 @@ std::vector<std::string> resolve_hostname(const std::string &hostname) {
     // free the linked list memory
     freeaddrinfo(servinfo);
 
-    spdlog::debug("Resolved IP: {}", ips);
+    spdlog::debug("Resolved IP(s): {}", ips);
     return res;
 }
