@@ -8,6 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Common output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+# fetch external libraries
 include(FetchContent)
 find_package(Boost REQUIRED thread)
 find_package(spdlog QUIET)
@@ -20,19 +21,25 @@ if(NOT spdlog_FOUND)
   FetchContent_MakeAvailable(spdlog)
 endif()
 
-# add to core_lib
+# add code to core_lib
 add_library(core_lib
     src/parsing/bencoding.cpp
     src/parsing/torrent.cpp
     src/parsing/buffer.cpp
+    src/network/network_utils.cpp
+    src/network/tcp.cpp
 )
 add_library(boost INTERFACE)
 
 target_include_directories(boost INTERFACE ${Boost_INCLUDE_DIRS})
 target_include_directories(core_lib PUBLIC include)
 
-target_link_libraries(core_lib PUBLIC spdlog::spdlog)
+target_link_libraries(core_lib PUBLIC 
+    spdlog::spdlog
+    Boost::thread
+)
 
+# main executable
 add_executable(bit_torrent src/main.cpp)
 target_link_libraries(bit_torrent PRIVATE core_lib)
 

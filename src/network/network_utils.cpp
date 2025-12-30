@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <vector>
 
-int make_client_socket(const std::string &ip_address, uint16_t port) {
+int make_client_socket(const std::string &ip_address, uint16_t port, bool blocking) {
     // TODO: udp
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -27,7 +27,7 @@ int make_client_socket(const std::string &ip_address, uint16_t port) {
         close(sockfd);
         return -1;
     }
-    if (fcntl(sockfd, F_SETFL, flags | O_NONBLOCK) == -1) {
+    if (fcntl(sockfd, F_SETFL, flags | (blocking ? 0 : O_NONBLOCK)) == -1) {
         spdlog::error("fcntl set nonblock failed");
         close(sockfd);
         return -1;
@@ -53,8 +53,8 @@ int make_client_socket(const std::string &ip_address, uint16_t port) {
             close(sockfd);
             return -1;
         }
-        spdlog::debug("Connection initiated to {}:{}", ip_address, port);
     }
+    spdlog::debug("Connection initiated to {}:{}", ip_address, port);
 
     return sockfd;
 }

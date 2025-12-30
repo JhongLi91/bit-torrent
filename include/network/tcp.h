@@ -1,11 +1,19 @@
 #pragma once
 
 #include "parsing/buffer.h"
+#include <cstdint>
 
-namespace tcp {
-void send_all(buffer_t &msg);
-void receive_n(uint32_t n, buffer_t &buf);
+const size_t MAX_BUF_SIZE = 1500;
 
-int setup();
+class tcp {
+  public:
+    tcp(const std::string &ip_address, uint16_t port);
+    int setup(std::string &ip, uint16_t port);
 
-}; // namespace tcp
+    int send_all(buffer_t &msg);
+    buffer_t receive_n(uint32_t n);
+
+  private:
+    int sockfd;
+    buffer_t buf;
+};
