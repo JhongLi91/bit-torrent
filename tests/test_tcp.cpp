@@ -1,4 +1,3 @@
-#include "network/network_utils.h"
 #include "network/tcp.h"
 #include "parsing/buffer.h"
 #include "spdlog/spdlog.h"
@@ -8,11 +7,9 @@
 int main() {
     spdlog::set_level(spdlog::level::debug);
 
-    std::string host = "tcpbin.com";
-    auto ips = resolve_hostname(host);
-    assert(!ips.empty());
+    // create client to tcpbin.com
+    tcp client("tcpbin.com", 4242);
 
-    tcp client(ips[0], 4242);
     std::string msg = "hello, world\n";
     buffer_t send_buf(msg.begin(), msg.end());
 
@@ -21,7 +18,7 @@ int main() {
         exit(1);
     }
 
-    auto rv = client.receive_n(msg.size());
+    auto rv = client.receive();
     assert(!rv.empty());
 
     for (int i = 0; i < msg.size(); i++) {

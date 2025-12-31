@@ -23,9 +23,13 @@ endif()
 
 # add code to core_lib
 add_library(core_lib
+    # parsing
     src/parsing/bencoding.cpp
     src/parsing/torrent.cpp
     src/parsing/buffer.cpp
+
+    # network
+    src/network/http.cpp
     src/network/network_utils.cpp
     src/network/tcp.cpp
 )

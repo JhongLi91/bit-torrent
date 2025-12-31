@@ -70,7 +70,7 @@ std::vector<std::string> resolve_hostname(const std::string &hostname) {
     // DNS lookup
     int status;
     if ((status = getaddrinfo(hostname.c_str(), nullptr, &hints, &servinfo)) != 0) {
-        spdlog::error("DNS Error: {}", gai_strerror(status));
+        spdlog::error("DNS error when resolving host {}:\n{}", hostname, gai_strerror(status));
         exit(1);
     }
 
