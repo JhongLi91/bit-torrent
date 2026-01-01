@@ -1,35 +1,39 @@
 #include "parsing/torrent.h"
-#include "spdlog/spdlog.h"
-#include <cassert>
-#include <iostream>
+#include <fstream>
+#include <gtest/gtest.h>
+#include <string>
 
-#include <CommonCrypto/CommonDigest.h>
-
-int main() {
+TEST(TorrentTest, ParsesUbuntuTorrentFile) {
     std::string path = "../assets/ubuntu-24.04.1-live-server-amd64.iso.torrent";
+
+    std::ifstream f(path);
+    ASSERT_TRUE(f.good()) << "Test failed to find the assets file at: " << path;
+
     torrent torr(path);
 
-    std::string hash = torr.info_hash;
-    std::string expected = "41e6cd50ccec55cd5704c5e3d176e7b59317a3fb";
+    std::string expected_hash = "41e6cd50ccec55cd5704c5e3d176e7b59317a3fb";
 
-    std::cout << "Calculated Info Hash: " << hash << "\n";
-    std::cout << "Expected Info Hash:   " << expected << "\n";
-
-    assert(hash == expected);
-    assert(torr.announce_url == "https://torrent.ubuntu.com/announce");
-    assert(torr.file_name == "ubuntu-24.04.1-live-server-amd64.iso");
-    assert(torr.piece_length == 262144);
+    EXPECT_EQ(torr.info_hash, expected_hash);
+    EXPECT_EQ(torr.announce_url, "https://torrent.ubuntu.com/announce");
+    EXPECT_EQ(torr.file_name, "ubuntu-24.04.1-live-server-amd64.iso");
+    EXPECT_EQ(torr.piece_length, 262144);
 
     auto [hostname, port] = torr.get_hostname_and_port();
-    assert(hostname == "torrent.ubuntu.com");
-    assert(port == 80);
+    EXPECT_EQ(hostname, "torrent.ubuntu.com");
+    EXPECT_EQ(port, 80);
+}
 
-    // testing port parsing
+TEST(TorrentTest, ParsesHostnameAndPortFromUrl) {
+    torrent torr;
+
     torr.announce_url = "https://torrent.ubuntu.com:6969/announce";
-    auto [_hostname, _port] = torr.get_hostname_and_port();
-    assert(_hostname == "torrent.ubuntu.com");
-    assert(_port == 6969);
+    auto [hostname, port] = torr.get_hostname_and_port();
 
-    spdlog::info("Success!");
-    return 0;
+    EXPECT_EQ(hostname, "torrent.ubuntu.com");
+    EXPECT_EQ(port, 6969);
+
+    torr.announce_url = "http://tracker.opentrackr.org/announce";
+    auto [host2, port2] = torr.get_hostname_and_port();
+    EXPECT_EQ(host2, "tracker.opentrackr.org");
+    EXPECT_EQ(port2, 80);
 }

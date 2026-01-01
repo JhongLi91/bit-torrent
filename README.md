@@ -32,11 +32,7 @@ make -j 8
 ```
 
 # Testing
-```
-cmake -DCMAKE_BUILD_TYPE=Debug ..
-make -j 8
-ctest
-```
+`ctest`
 
 # Demo
 - TODO

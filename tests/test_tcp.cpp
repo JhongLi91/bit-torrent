@@ -1,30 +1,19 @@
 #include "network/tcp.h"
 #include "parsing/buffer.h"
-#include "spdlog/spdlog.h"
-#include <cassert>
+#include <gtest/gtest.h>
 #include <string>
 
-int main() {
-    spdlog::set_level(spdlog::level::debug);
-
-    // create client to tcpbin.com
+TEST(TcpIntegrationTest, EchoServerReturnsSameData) {
     tcp client("tcpbin.com", 4242);
 
     std::string msg = "hello, world\n";
     buffer_t send_buf(msg.begin(), msg.end());
 
-    if (client.send_all(send_buf) < 0) {
-        spdlog::error("Send failed! Error: {}", strerror(errno));
-        exit(1);
-    }
+    ssize_t sent_bytes = client.send_all(send_buf);
+    ASSERT_GE(sent_bytes, 0) << "Send failed! Check internet connection or if tcpbin.com is down.";
 
     auto rv = client.receive();
-    assert(!rv.empty());
 
-    for (int i = 0; i < msg.size(); i++) {
-        assert(send_buf[i] == rv[i]);
-    }
-
-    spdlog::info("Success!");
-    return 0;
+    ASSERT_FALSE(rv.empty()) << "Received empty response from echo server.";
+    EXPECT_EQ(send_buf, rv) << "Received data did not match sent data.";
 }

@@ -12,6 +12,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 include(FetchContent)
 find_package(Boost REQUIRED thread)
 find_package(spdlog QUIET)
+find_package(googletest QUIET)
+
 if(NOT spdlog_FOUND)
   message(STATUS "Fetching spdlog")
   FetchContent_Declare(
@@ -19,6 +21,15 @@ if(NOT spdlog_FOUND)
     GIT_REPOSITORY https://github.com/gabime/spdlog.git
     GIT_TAG v1.14.1)
   FetchContent_MakeAvailable(spdlog)
+endif()
+if(NOT googletest_FOUND)
+  message(STATUS "Fetching googletest")
+  FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/heads/main.zip
+  )
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(googletest)
 endif()
 
 # add code to core_lib
@@ -45,6 +56,7 @@ target_include_directories(core_lib PUBLIC include)
 target_link_libraries(core_lib PUBLIC 
     spdlog::spdlog
     Boost::thread
+    GTest::gtest_main
 )
 
 # main executable
