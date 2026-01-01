@@ -36,6 +36,7 @@ buffer_t http::get(const std::string &path,
 
     // terminator
     payload << CRLF;
+    spdlog::debug("http req sent:\n{}", payload.view());
 
     buffer_t data(begin(payload.view()), end(payload.view()));
     tcp.send_all(data);
@@ -52,7 +53,6 @@ buffer_t http::get_data() {
             break;
         res.insert(res.end(), data.begin(), data.end());
     }
-    spdlog::debug("HTTP Received {} bytes total.", res.size());
 
     // trim off header and get data
     const std::vector<uint8_t> delimiter = {'\r', '\n', '\r', '\n'};

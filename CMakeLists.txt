@@ -32,6 +32,10 @@ add_library(core_lib
     src/network/http.cpp
     src/network/network_utils.cpp
     src/network/tcp.cpp
+
+    # tracker
+    src/tracker/peer_id.cpp
+    src/tracker/tracker.cpp
 )
 add_library(boost INTERFACE)
 

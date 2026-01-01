@@ -1,8 +1,8 @@
 #pragma once
 
 #include "tracker/peer.h"
-#include "tracker/peer_id.h"
 #include <memory>
+#include <string>
 
 class connection {
 
@@ -20,5 +20,5 @@ class connection {
 
     int fd;
     std::unique_ptr<peer> peer;
-    peer_id peer_id;
+    std::string peer_id;
 };

@@ -10,7 +10,7 @@ const std::string CRLF = "\r\n";
 
 class http {
   public:
-    http(const std::string &url, uint16_t port = 80,
+    http(const std::string &host, uint16_t port = 80,
          const std::string &user_agent = "BitTorrentClient/1.0");
 
     buffer_t get(const std::string &path,

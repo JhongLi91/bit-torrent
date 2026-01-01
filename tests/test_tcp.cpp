@@ -25,5 +25,6 @@ int main() {
         assert(send_buf[i] == rv[i]);
     }
 
+    spdlog::info("Success!");
     return 0;
 }

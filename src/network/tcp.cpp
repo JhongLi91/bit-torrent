@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <vector>
 
-tcp::tcp(const std::string &hostname, uint16_t port) : sockfd(-1) {
+tcp::tcp(const std::string &hostname, uint16_t port) : hostname(hostname), port(port), sockfd(-1) {
     buf.resize(MAX_BUF_SIZE);
     std::vector<std::string> ips = resolve_hostname(hostname);
 
@@ -22,6 +22,7 @@ tcp::tcp(const std::string &hostname, uint16_t port) : sockfd(-1) {
         spdlog::error("Failed to connect to {}:{} via tcp", hostname, port);
         throw std::runtime_error("Error in creating tcp connection");
     }
+    spdlog::debug("Connection established with {}:{}", hostname, port);
 }
 
 tcp::~tcp() { close(sockfd); }
@@ -34,7 +35,7 @@ int tcp::send_all(buffer_t &msg) {
             return -1;
         sent += n;
     }
-    spdlog::debug("Msg sent: {:X}", spdlog::to_hex(msg));
+    spdlog::debug("sent {} bytes to {}:{}", sent, hostname, port);
     return sent;
 }
 
@@ -49,6 +50,6 @@ buffer_t tcp::receive() {
         return {};
     }
     buffer_t res(buf.data(), buf.data() + rv);
-    spdlog::debug("Msg received: {:X}", spdlog::to_hex(res));
+    spdlog::debug("received {} bytes from {}:{}", rv, hostname, port);
     return res;
 }

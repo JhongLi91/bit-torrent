@@ -13,12 +13,15 @@ namespace parsing::bencoding {
 
 struct Bitem;
 
+using Bmap = std::map<std::string, Bitem>;
+using Blist = std::vector<Bitem>;
+
 // clang-format off
 using Bvalue = std::variant<
     ll,
     std::string, 
-    std::vector<Bitem>,
-    std::map<std::string, Bitem>
+    Blist,
+    Bmap
 >; // clang-format on
 
 struct Bitem {

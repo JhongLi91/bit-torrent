@@ -1,4 +1,5 @@
 #include "parsing/buffer.h"
+#include "spdlog/spdlog.h"
 #include <cassert>
 
 using namespace parser::buffer;
@@ -54,5 +55,6 @@ int main() {
     test_2byte();
     test_4byte();
     test_boundaries();
+    spdlog::info("Success!");
     return 0;
 }

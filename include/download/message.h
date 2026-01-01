@@ -2,7 +2,7 @@
 
 #include <string>
 
-enum MESSAGE {
+enum MESSAGE_TYPE {
     CHOKE = 0,
     UNCHOKE = 1,
     INTERESTED = 2,
@@ -15,9 +15,6 @@ enum MESSAGE {
 };
 
 namespace message {
-void send_tracker(int fd, std::string &info_hash);
-void send_handshake(int fd, std::string &info_hash);
-
-void send_message(int fd, MESSAGE msg);
-
+void build_handshake(int fd, std::string &info_hash);
+void build_message(int fd, MESSAGE_TYPE msg);
 }; // namespace message

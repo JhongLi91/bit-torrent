@@ -1,7 +1,7 @@
 #include "parsing/torrent.h"
 #include "parsing/bencoding.h"
-
 #include <CommonCrypto/CommonDigest.h>
+#include <boost/algorithm/hex.hpp>
 #include <fstream>
 #include <spdlog/spdlog.h>
 #include <sstream>
@@ -13,20 +13,21 @@ torrent::torrent(const std::string &path) {
 
     // decode and extract root
     auto root = parsing::bencoding::decode(data);
-    auto &rootMap = std::get<std::map<std::string, parsing::bencoding::Bitem>>(root.val);
+    auto &rootMap = std::get<parsing::bencoding::Bmap>(root.val);
     if (rootMap.find("announce") == end(rootMap) || rootMap.find("info") == end(rootMap)) {
         spdlog::error("Error: Invalid torrent file");
         exit(1);
     }
 
     // extract info dictionary
-    auto &info = std::get<std::map<std::string, parsing::bencoding::Bitem>>(rootMap["info"].val);
+    auto &info = std::get<parsing::bencoding::Bmap>(rootMap["info"].val);
 
     // populate data
     announce_url = std::get<std::string>(rootMap["announce"].val);
     file_name = std::get<std::string>(info["name"].val);
     piece_length = std::get<ll>(info["piece length"].val);
     pieces = std::get<std::string>(info["pieces"].val);
+    length = std::get<ll>(info["length"].val);
 
     // re-encode info dictionary to get info hash
     std::string infoBytes = parsing::bencoding::encode(rootMap["info"]);
@@ -38,9 +39,7 @@ bool torrent::verify_piece(const std::string &hash, uint32_t piece_idx) {
 }
 
 std::pair<std::string, uint16_t> torrent::get_hostname_and_port() {
-    std::string http = "http://";
-
-    size_t start = http.size() + 1;
+    size_t start = announce_url.find("://") + 3;
     auto end = announce_url.find("/", start);
     auto colon = announce_url.find(":", start);
 
@@ -53,6 +52,13 @@ std::pair<std::string, uint16_t> torrent::get_hostname_and_port() {
     uint16_t port = stoi(announce_url.substr(colon + 1, end - colon - 1));
     return {hostname, port};
 };
+
+std::string torrent::get_unhex_info_hash() {
+    std::string res;
+    res.reserve(info_hash.size() / 2);
+    boost::algorithm::unhex(info_hash.begin(), info_hash.end(), std::back_inserter(res));
+    return res;
+}
 
 // Private
 std::string torrent::loadFile(const std::string &path) {

@@ -31,5 +31,6 @@ int main() {
     assert(body.find("hello world") != std::string::npos);
     assert(body.find("6881") != std::string::npos);
 
+    spdlog::info("Success!");
     return 0;
 }

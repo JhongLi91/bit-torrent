@@ -54,8 +54,6 @@ int make_client_socket(const std::string &ip_address, uint16_t port, bool blocki
             return -1;
         }
     }
-    spdlog::debug("Connection initiated to {}:{}", ip_address, port);
-
     return sockfd;
 }
 

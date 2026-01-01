@@ -1,4 +1,5 @@
 #include "parsing/bencoding.h"
+#include "spdlog/spdlog.h"
 #include <cassert>
 #include <map>
 #include <string>
@@ -78,5 +79,6 @@ int main() {
     test_lists();
     test_dictionaries();
     test_nested_complex();
+    spdlog::info("Success!");
     return 0;
 }

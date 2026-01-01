@@ -15,6 +15,9 @@ class tcp {
     buffer_t receive();
 
   private:
+    const std::string hostname;
+    uint16_t port;
+
     int sockfd;
     buffer_t buf;
 };
