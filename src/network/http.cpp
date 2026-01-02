@@ -38,9 +38,11 @@ buffer_t http::get(const std::string &path,
     payload << CRLF;
     spdlog::debug("http req sent:\n{}", payload.view());
 
+    // send data via tcp
     buffer_t data(begin(payload.view()), end(payload.view()));
     tcp.send_all(data);
 
+    // receive from server and return only data
     return get_data();
 }
 

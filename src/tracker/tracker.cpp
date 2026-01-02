@@ -12,9 +12,11 @@
 #include <vector>
 
 std::vector<peer> tracker::get_peers(torrent &torrent) {
+    // get host and port from torrent file and create http client
     auto [host, port] = torrent.get_hostname_and_port();
     http client(host, port);
 
+    // construct params for http
     std::vector<std::pair<std::string, std::string>> params;
     params.push_back({"info_hash", torrent.get_unhex_info_hash()});
     params.push_back({"peer_id", generate_peer_id()});
@@ -24,6 +26,7 @@ std::vector<peer> tracker::get_peers(torrent &torrent) {
     params.push_back({"compact", "1"});
     params.push_back({"left", std::to_string(torrent.length)});
 
+    // send http get request
     buffer_t data = client.get("/announce", params);
 
     // decoding bencoded data
@@ -31,6 +34,7 @@ std::vector<peer> tracker::get_peers(torrent &torrent) {
     auto root = parsing::bencoding::decode(view);
     auto &dict = std::get<parsing::bencoding::Bmap>(root.val);
 
+    // get raw peer bytes
     const std::string &peers_blob = std::get<std::string>(dict["peers"].val);
     buffer_t peers_buf(peers_blob.begin(), peers_blob.end());
 

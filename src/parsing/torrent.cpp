@@ -23,11 +23,11 @@ torrent::torrent(const std::string &path) {
     auto &info = std::get<parsing::bencoding::Bmap>(rootMap["info"].val);
 
     // populate data
-    announce_url = std::get<std::string>(rootMap["announce"].val);
+    length = std::get<ll>(info["length"].val);
+    pieces = std::get<std::string>(info["pieces"].val);
     file_name = std::get<std::string>(info["name"].val);
     piece_length = std::get<ll>(info["piece length"].val);
-    pieces = std::get<std::string>(info["pieces"].val);
-    length = std::get<ll>(info["length"].val);
+    announce_url = std::get<std::string>(rootMap["announce"].val);
 
     // re-encode info dictionary to get info hash
     std::string infoBytes = parsing::bencoding::encode(rootMap["info"]);
