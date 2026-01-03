@@ -63,3 +63,50 @@ TEST(BufferTest, HandlesBoundaries) {
     EXPECT_EQ(buf[1], 0xBB);
     EXPECT_EQ(buf[2], 0xCC);
 }
+
+TEST(BufferTest, HandlesSetNB) {
+    buffer_t buf(10, 0);
+
+    uint8_t src[] = {0x01, 0x02, 0x03};
+    setNB(buf, src, 3, 2);
+
+    EXPECT_EQ(buf[2], 0x01);
+    EXPECT_EQ(buf[3], 0x02);
+    EXPECT_EQ(buf[4], 0x03);
+    EXPECT_EQ(buf[5], 0x00);
+
+    const char *msg = "Hi";
+    setNB(buf, (void *)msg, 2, 8);
+
+    EXPECT_EQ(buf[8], 'H');
+    EXPECT_EQ(buf[9], 'i');
+}
+
+TEST(BufferTest, HandlesGetNB) {
+    buffer_t buf(10, 0);
+
+    buf[0] = 0xAA;
+    buf[1] = 0xBB;
+    buf[2] = 0xCC;
+    buf[3] = 0xDD;
+
+    buffer_t slice = getNB(buf, 2, 1);
+
+    ASSERT_EQ(slice.size(), 2);
+    EXPECT_EQ(slice[0], 0xBB);
+    EXPECT_EQ(slice[1], 0xCC);
+}
+
+TEST(BufferTest, HandlesGetSetNBPairing) {
+    buffer_t buf(20, 0xFF);
+
+    std::string secret = "BitTorrent";
+
+    setNB(buf, (void *)secret.data(), secret.size(), 5);
+
+    buffer_t read_back = getNB(buf, secret.size(), 5);
+
+    std::string result(read_back.begin(), read_back.end());
+
+    EXPECT_EQ(result, secret);
+}
