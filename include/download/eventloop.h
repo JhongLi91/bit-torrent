@@ -5,6 +5,7 @@
 
 class eventloop {
   public:
+    eventloop();
     std::vector<int> poll_events();
 
     void register_fd(int fd);
@@ -12,6 +13,5 @@ class eventloop {
 
   private:
     int kq;
-    // TODO: there are at most 50 peers, but this may cause error
     struct kevent events[50];
 };
