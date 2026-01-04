@@ -2,7 +2,6 @@
 
 #include <string>
 #include <utility>
-#include <vector>
 
 using ll = long long;
 const uint32_t HASH_LENGTH = 20;
@@ -21,12 +20,14 @@ class torrent {
     std::string sha1(const std::string &input);
 
   public:
+    std::string peer_id;
+
     std::string announce_url;
     std::string file_name;
 
+    ll length;
     ll piece_length;
     std::string pieces;
-    ll length;
 
     std::string info_hash;
 };

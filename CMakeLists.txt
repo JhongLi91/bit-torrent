@@ -49,6 +49,9 @@ add_library(core_lib
     src/tracker/tracker.cpp
 
     # downloader
+    src/download/connection.cpp
+    src/download/downloader.cpp
+    src/download/eventloop.cpp
     src/download/message.cpp
 )
 add_library(boost INTERFACE)

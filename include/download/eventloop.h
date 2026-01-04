@@ -3,7 +3,7 @@
 #include <sys/event.h>
 #include <vector>
 
-class event_loop {
+class eventloop {
   public:
     std::vector<int> poll_events();
 
