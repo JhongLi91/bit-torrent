@@ -47,6 +47,9 @@ add_library(core_lib
     # tracker
     src/tracker/peer_id.cpp
     src/tracker/tracker.cpp
+
+    # downloader
+    src/download/message.cpp
 )
 add_library(boost INTERFACE)
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-typedef std::vector<uint8_t> buffer_t;
+using buffer_t = std::vector<uint8_t>;
 
 namespace parser::buffer {
 
