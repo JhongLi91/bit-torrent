@@ -13,5 +13,4 @@ class eventloop {
 
   private:
     int kq;
-    struct kevent events[50];
 };
