@@ -1,5 +1,6 @@
 #pragma once
 
+#include "network/tcp.h"
 #include "parsing/buffer.h"
 #include "parsing/torrent.h"
 #include "tracker/peer.h"
@@ -8,8 +9,7 @@
 class connection {
 
   public:
-    connection() = default;
-    connection(int fd, const peer &peer, std::shared_ptr<buffer_t> bitfield, torrent *torrent);
+    connection(tcp &tcp, const peer &peer, std::shared_ptr<buffer_t> bitfield, torrent *torrent);
     void handle_event();
 
   private:
@@ -20,18 +20,17 @@ class connection {
     void disk_read(uint32_t block, buffer_t &buf);
 
   private:
+    // peer states
     bool handshaked;
-
     bool am_choking;
     bool am_interested;
     bool peer_choking;
     bool peer_interested;
 
-    int sockfd;
     peer peer;
-
-    std::shared_ptr<buffer_t> bitfield;
     buffer_t peer_bitfield;
+    std::shared_ptr<buffer_t> bitfield;
 
     torrent *torrent;
+    tcp tcp;
 };

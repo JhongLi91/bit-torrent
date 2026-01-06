@@ -1,5 +1,6 @@
 #include "parsing/torrent.h"
 #include "parsing/bencoding.h"
+#include "tracker/peer_id.h"
 #include <CommonCrypto/CommonDigest.h>
 #include <boost/algorithm/hex.hpp>
 #include <fstream>
@@ -7,7 +8,7 @@
 #include <sstream>
 #include <utility>
 
-torrent::torrent(const std::string &path) {
+torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     // load torrent file
     std::string data = loadFile(path);
 

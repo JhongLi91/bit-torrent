@@ -16,11 +16,7 @@ class downloader {
 
   private:
     bool is_finished();
-    bool is_endgame();
-    void handle_endgame();
-
     void connect(const peer &peer);
-    void close_connection(int fd);
 
   private:
     torrent torrent_file;

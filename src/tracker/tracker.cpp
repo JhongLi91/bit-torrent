@@ -5,7 +5,6 @@
 #include "parsing/torrent.h"
 #include "spdlog/spdlog.h"
 #include "tracker/peer.h"
-#include "tracker/peer_id.h"
 #include <boost/algorithm/hex.hpp>
 #include <string>
 #include <utility>
@@ -19,7 +18,7 @@ std::vector<peer> tracker::get_peers(torrent &torrent) {
     // construct params for http
     std::vector<std::pair<std::string, std::string>> params;
     params.push_back({"info_hash", torrent.get_unhex_info_hash()});
-    params.push_back({"peer_id", generate_peer_id()});
+    params.push_back({"peer_id", torrent.peer_id});
     params.push_back({"port", "6881"});
     params.push_back({"uploaded", "0"});
     params.push_back({"downloaded", "0"});

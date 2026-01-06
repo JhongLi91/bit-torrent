@@ -9,12 +9,13 @@
 #include <unistd.h>
 #include <vector>
 
-tcp::tcp(const std::string &hostname, uint16_t port) : hostname(hostname), port(port), sockfd(-1) {
+tcp::tcp(const std::string &hostname, uint16_t port, bool blocking)
+    : hostname(hostname), port(port), sockfd(-1) {
     buf.resize(MAX_BUF_SIZE);
     std::vector<std::string> ips = resolve_hostname(hostname);
 
     for (std::string &ip : ips) {
-        sockfd = make_client_socket(ip, port, true);
+        sockfd = make_client_socket(ip, port, blocking);
         if (sockfd != -1)
             break;
     }
@@ -26,6 +27,8 @@ tcp::tcp(const std::string &hostname, uint16_t port) : hostname(hostname), port(
 }
 
 tcp::~tcp() { close(sockfd); }
+
+int tcp::get_sockfd() { return sockfd; }
 
 int tcp::send_all(buffer_t &msg) {
     size_t sent = 0;

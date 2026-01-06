@@ -9,7 +9,7 @@
 #include <vector>
 
 http::http(const std::string &host, uint16_t port, const std::string &user_agent)
-    : host(host), port(port), user_agent(user_agent), tcp(host, port) {}
+    : host(host), port(port), user_agent(user_agent), tcp(host, port, true) {}
 
 buffer_t http::get(const std::string &path,
                    const std::vector<std::pair<std::string, std::string>> &params) {
