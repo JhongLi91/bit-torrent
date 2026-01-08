@@ -4,7 +4,7 @@
 #include <string>
 
 TEST(TcpIntegrationTest, EchoServerReturnsSameData) {
-    tcp client("tcpbin.com", 4242);
+    tcp client("tcpbin.com", 4242, true);
 
     std::string msg = "hello, world\n";
     buffer_t send_buf(msg.begin(), msg.end());

@@ -1,11 +1,12 @@
 #include "parsing/torrent.h"
+#include "spdlog/common.h"
 #include "spdlog/spdlog.h"
 #include "tracker/tracker.h"
 #include <gtest/gtest.h>
-#include <iostream>
 #include <vector>
 
 TEST(TrackerIntegrationTest, FetchesPeersFromLiveTracker) {
+    spdlog::set_level(spdlog::level::debug);
     torrent t;
     t.info_hash = "51fe0a3e0f53991d5e38aa4571368797f45e0e9e";
     t.length = 4554303488;
