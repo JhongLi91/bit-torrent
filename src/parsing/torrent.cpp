@@ -8,6 +8,7 @@
 #include <sstream>
 #include <utility>
 
+torrent::torrent() : peer_id(generate_peer_id()) {}
 torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     // load torrent file
     std::string data = loadFile(path);

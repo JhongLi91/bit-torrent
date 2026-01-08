@@ -27,6 +27,7 @@ std::vector<peer> tracker::get_peers(torrent &torrent) {
 
     // send http get request
     buffer_t data = client.get("/announce", params);
+    spdlog::debug("http data recv:\n{}", reinterpret_cast<char *>(data.data()));
 
     // decoding bencoded data
     std::string_view view(reinterpret_cast<const char *>(data.data()), data.size());

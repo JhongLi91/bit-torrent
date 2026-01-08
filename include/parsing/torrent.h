@@ -8,7 +8,7 @@ const uint32_t HASH_LENGTH = 20;
 
 class torrent {
   public:
-    torrent() = default;
+    torrent();
     torrent(const std::string &path);
     bool verify_piece(const std::string &hash, uint32_t piece_idx);
     std::pair<std::string, uint16_t> get_hostname_and_port();
