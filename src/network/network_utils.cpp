@@ -1,5 +1,6 @@
 #include "network/network_utils.h"
 #include "spdlog/spdlog.h"
+#include "tracker/peer.h"
 #include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
@@ -125,4 +126,46 @@ std::vector<std::string> resolve_hostname(const std::string &hostname) {
 
     spdlog::debug("Resolved IP(s): {}", ips);
     return res;
+}
+
+std::pair<int, peer> accept_client(int server_fd) {
+    sockaddr_storage client_addr;
+    socklen_t sin_size = sizeof(client_addr);
+    char ip_str[INET6_ADDRSTRLEN];
+    int port = 0;
+
+    int client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &sin_size);
+    if (client_fd == -1) {
+        spdlog::error("Error: failed on client accept");
+        return {-1, peer()};
+    }
+
+    if (client_addr.ss_family == AF_INET) {
+        // IPv4 Case
+        struct sockaddr_in *s4 = (struct sockaddr_in *)&client_addr;
+        inet_ntop(AF_INET, &(s4->sin_addr), ip_str, sizeof(ip_str));
+        port = ntohs(s4->sin_port);
+    }
+    else {
+        // IPv6 Case
+        struct sockaddr_in6 *s6 = (struct sockaddr_in6 *)&client_addr;
+        inet_ntop(AF_INET6, &(s6->sin6_addr), ip_str, sizeof(ip_str));
+        port = ntohs(s6->sin6_port);
+    }
+
+    spdlog::debug("Accepted connection from {}:{}", ip_str, port);
+
+    return {client_fd, peer(ip_str, port)};
+}
+
+int send_all(int sockfd, std::string bytes) {
+    size_t sent = 0;
+    do {
+        const ssize_t n = send(sockfd, bytes.data() + sent, bytes.size() - sent, MSG_NOSIGNAL);
+        if (n < 0) {
+            return -1;
+        }
+        sent += n;
+    } while (sent < bytes.size());
+    return 0;
 }

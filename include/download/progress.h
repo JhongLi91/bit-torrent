@@ -8,6 +8,7 @@ class progress {
 
   public:
     progress(uint32_t n);
+    bool is_endgame();
     bool is_complete();
     int next_piece_to_request(buffer_t &peer_bitfield);
     void update_have(uint32_t piece);
