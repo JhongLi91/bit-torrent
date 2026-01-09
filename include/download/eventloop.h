@@ -1,7 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <sys/event.h>
 #include <vector>
+
+const uint32_t MAX_EVENT_POLL = 50;
 
 class eventloop {
   public:

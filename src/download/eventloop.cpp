@@ -12,11 +12,11 @@ eventloop::eventloop() : kq(-1) {
 }
 
 std::vector<int> eventloop::poll_events() {
-    struct kevent events[50];
+    struct kevent events[MAX_EVENT_POLL];
     struct timespec timeout = {5, 0}; // Wait 5 seconds max
 
     // Call kevent to query 50 events
-    int new_events_count = kevent(kq, NULL, 0, events, 50, &timeout);
+    int new_events_count = kevent(kq, NULL, 0, events, MAX_EVENT_POLL, &timeout);
 
     if (new_events_count == -1) {
         spdlog::warn("failed to poll event or no events within 5 seconds");
@@ -29,9 +29,7 @@ std::vector<int> eventloop::poll_events() {
     for (int i = 0; i < new_events_count; i++) {
         int fd = (int)events[i].ident;
 
-        if (events[i].flags & EV_EOF)
-            spdlog::debug("Socket {} closed by peer", fd);
-        else if (events[i].flags & EV_ERROR)
+        if (events[i].flags & EV_ERROR)
             spdlog::debug("Error on socket {}", fd);
 
         ready_fds.push_back(fd);
