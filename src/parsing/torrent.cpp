@@ -1,4 +1,5 @@
 #include "parsing/torrent.h"
+#include "network/network_utils.h"
 #include "parsing/bencoding.h"
 #include "tracker/peer_id.h"
 #include <CommonCrypto/CommonDigest.h>
@@ -8,7 +9,8 @@
 #include <sstream>
 #include <utility>
 
-torrent::torrent() : peer_id(generate_peer_id()) {}
+torrent::~torrent() { close(server_fd); }
+torrent::torrent() : port(0), peer_id(generate_peer_id()) {}
 torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     // load torrent file
     std::string data = loadFile(path);
@@ -34,6 +36,11 @@ torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     // re-encode info dictionary to get info hash
     std::string infoBytes = parsing::bencoding::encode(rootMap["info"]);
     info_hash = sha1(infoBytes);
+
+    // create a listener socket
+    auto [fd, _port] = make_server_socket();
+    server_fd = fd;
+    port = _port;
 }
 
 bool torrent::verify_piece(const std::string &hash, uint32_t piece_idx) {

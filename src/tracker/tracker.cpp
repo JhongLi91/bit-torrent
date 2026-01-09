@@ -19,7 +19,7 @@ std::vector<peer> tracker::get_peers(torrent &torrent) {
     std::vector<std::pair<std::string, std::string>> params;
     params.push_back({"info_hash", torrent.get_unhex_info_hash()});
     params.push_back({"peer_id", torrent.peer_id});
-    params.push_back({"port", "6881"});
+    params.push_back({"port", std::to_string(htons(torrent.port))});
     params.push_back({"uploaded", "0"});
     params.push_back({"downloaded", "0"});
     params.push_back({"compact", "1"});

@@ -12,6 +12,33 @@
 #include <unistd.h>
 #include <vector>
 
+std::pair<int, uint16_t> make_server_socket() {
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+
+    int port = 6881;
+    bool bound = false;
+
+    for (int i = 0; i < 9; i++) {
+        address.sin_port = htons(port);
+        if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) == 0) {
+            bound = true;
+            break;
+        }
+        port++;
+    }
+
+    if (!bound) {
+        spdlog::error("No ports available within [6881, 6889]");
+        exit(1);
+    }
+    spdlog::debug("binded to port {}", port);
+
+    return {server_fd, port};
+}
+
 int make_client_socket(const std::string &ip_address, uint16_t port, bool blocking) {
     // TODO: udp
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
