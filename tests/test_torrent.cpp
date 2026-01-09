@@ -1,9 +1,12 @@
 #include "parsing/torrent.h"
+#include "spdlog/spdlog.h"
 #include <fstream>
 #include <gtest/gtest.h>
 #include <string>
 
 TEST(TorrentTest, ParsesUbuntuTorrentFile) {
+    spdlog::set_level(spdlog::level::debug);
+
     std::string path = "../assets/ubuntu-24.04.1-live-server-amd64.iso.torrent";
 
     std::ifstream f(path);
@@ -24,6 +27,7 @@ TEST(TorrentTest, ParsesUbuntuTorrentFile) {
 }
 
 TEST(TorrentTest, ParsesHostnameAndPortFromUrl) {
+    spdlog::set_level(spdlog::level::debug);
     torrent torr;
 
     torr.announce_url = "https://torrent.ubuntu.com:6969/announce";

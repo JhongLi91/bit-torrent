@@ -1,10 +1,14 @@
 #include "network/http.h"
 #include "parsing/buffer.h"
+#include "spdlog/common.h"
+#include "spdlog/spdlog.h"
 #include <gtest/gtest.h>
 #include <string>
 #include <vector>
 
 TEST(HttpIntegrationTest, SendsGetRequestWithParams) {
+    spdlog::set_level(spdlog::level::debug);
+
     std::string host = "httpbin.org";
     uint16_t port = 80;
     std::string user_agent = "CppBitTorrent/1.0";
