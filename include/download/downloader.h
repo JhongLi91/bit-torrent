@@ -11,17 +11,17 @@
 class downloader {
 
   public:
-    downloader(torrent &torrent, std::vector<peer> &peers);
+    downloader(torrent &torrent, std::vector<peer_t> &peers);
 
   private:
     bool is_endgame();
     bool is_finished();
-    void connect(const peer &peer);
+    void connect(const peer_t &peer);
     void handle_accept();
 
   private:
     eventloop event;
-    progress progress;
+    progress_t progress;
     torrent torrent;
     std::unordered_map<int, connection> connections;
 };

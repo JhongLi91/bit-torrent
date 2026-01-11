@@ -5,7 +5,7 @@
 #include "parsing/torrent.h"
 #include <sys/socket.h>
 
-connection::connection(class tcp &tcp, const struct peer &peer, class progress *progress,
+connection::connection(class tcp &tcp, const peer_t &peer, progress_t *progress,
                        class torrent *torrent)
     : handshaked(false), am_choking(true), am_interested(false), peer_choking(true),
       peer_interested(false), tcp(std::move(tcp)), peer(peer), progress(progress),

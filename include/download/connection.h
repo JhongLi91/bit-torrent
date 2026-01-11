@@ -1,6 +1,7 @@
 #pragma once
 
 #include "download/job.h"
+#include "download/progress.h"
 #include "network/tcp.h"
 #include "parsing/buffer.h"
 #include "parsing/torrent.h"
@@ -10,7 +11,7 @@ class connection {
 
   public:
     connection(connection &&) = default;
-    connection(tcp &tcp, const peer &peer, struct progress *progress, torrent *torrent);
+    connection(tcp &tcp, const peer_t &peer, progress_t *progress, torrent *torrent);
     void handle_event();
 
   private:
@@ -28,10 +29,10 @@ class connection {
     bool peer_interested;
 
     torrent *torrent;
-    progress *progress;
+    progress_t *progress;
 
-    peer peer;
+    peer_t peer;
     buffer_t peer_bitfield;
-    job j;
+    job_t job;
     tcp tcp;
 };

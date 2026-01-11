@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-struct peer {
+struct peer_t {
     std::string ip;
     uint16_t port;
 };

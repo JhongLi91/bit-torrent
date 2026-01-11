@@ -6,9 +6,9 @@
 
 const uint32_t MAX_JOBS_IN_QUEUE = 5;
 
-struct job {
-    job();
-    job(uint32_t idx, uint32_t block_len, uint32_t piece_len);
+struct job_t {
+    job_t();
+    job_t(uint32_t idx, uint32_t block_len, uint32_t piece_len);
     void append_data(buffer_t &buf);
     bool is_finished();
 

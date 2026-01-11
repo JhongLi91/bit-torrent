@@ -10,7 +10,7 @@ TEST(TcpIntegrationTest, EchoServerReturnsSameData) {
     buffer_t send_buf(msg.begin(), msg.end());
 
     ssize_t sent_bytes = client.send_all(send_buf);
-    ASSERT_GE(sent_bytes, 0) << "Send failed! Check internet connection or if tcpbin.com is down.";
+    ASSERT_GE(sent_bytes, 0) << "Send failed.";
 
     auto rv = client.receive();
 

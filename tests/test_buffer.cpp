@@ -2,8 +2,6 @@
 #include <cstdint>
 #include <gtest/gtest.h>
 
-using namespace parser::buffer;
-
 TEST(BufferTest, Handles1Byte) {
     buffer_t buf(10, 0);
     uint8_t val = 0xFF;

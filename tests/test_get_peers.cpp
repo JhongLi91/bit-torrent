@@ -13,8 +13,7 @@ TEST(TrackerIntegrationTest, FetchesPeersFromLiveTracker) {
     t.piece_length = 262144;
     t.announce_url = "http://tracker.opentrackr.org:1337/announce";
 
-    // Act
-    std::vector<peer> peers = tracker::get_peers(t);
+    std::vector<peer_t> peers = tracker::get_peers(t);
 
     ASSERT_FALSE(peers.empty())
         << "Expected to receive at least one peer from the tracker, but got none.";

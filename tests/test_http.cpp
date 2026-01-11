@@ -20,7 +20,7 @@ TEST(HttpIntegrationTest, SendsGetRequestWithParams) {
 
     buffer_t res = client.get("/get", params);
 
-    ASSERT_FALSE(res.empty()) << "HTTP response was empty. Network down or host unreachable?";
+    ASSERT_FALSE(res.empty()) << "HTTP response was empty.";
 
     std::string body(res.begin(), res.end());
 

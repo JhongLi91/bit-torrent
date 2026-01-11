@@ -2,8 +2,6 @@
 #include "spdlog/spdlog.h"
 #include <cstdint>
 
-namespace parser::buffer {
-
 void check_bounds(const buffer_t &buf, uint32_t idx, uint32_t needed) {
     if (idx + needed > buf.size()) {
         spdlog::error("Index Out of Bound");
@@ -55,5 +53,3 @@ void setNB(buffer_t &dst, const void *src, uint32_t n, uint32_t idx) {
     check_bounds(dst, idx, n);
     std::memcpy(&dst[idx], src, n);
 }
-
-} // namespace parser::buffer

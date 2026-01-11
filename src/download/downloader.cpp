@@ -6,14 +6,14 @@
 #include <utility>
 #include <vector>
 
-downloader::downloader(class torrent &torrent, std::vector<peer> &peers)
+downloader::downloader(class torrent &torrent, std::vector<peer_t> &peers)
     : torrent(std::move(torrent)), progress(torrent.pieces.size() / 20) {
 
     // register listener fd to event
     event.register_fd(torrent.server_fd);
 
     // make connection to all peers existing peers
-    for (peer &peer : peers)
+    for (peer_t &peer : peers)
         connect(peer);
 
     // main loop
@@ -27,7 +27,7 @@ downloader::downloader(class torrent &torrent, std::vector<peer> &peers)
     }
 }
 
-void downloader::connect(const peer &peer) {
+void downloader::connect(const peer_t &peer) {
     tcp tcp(peer.ip, peer.port, false); // non blocking
 
     // register sockfd to eventloop

@@ -2,6 +2,7 @@
 #include "spdlog/spdlog.h"
 #include "tracker/peer.h"
 #include <arpa/inet.h>
+#include <cerrno>
 #include <cstring>
 #include <fcntl.h>
 #include <netdb.h>
@@ -128,7 +129,7 @@ std::vector<std::string> resolve_hostname(const std::string &hostname) {
     return res;
 }
 
-std::pair<int, peer> accept_client(int server_fd) {
+std::pair<int, peer_t> accept_client(int server_fd) {
     sockaddr_storage client_addr;
     socklen_t sin_size = sizeof(client_addr);
     char ip_str[INET6_ADDRSTRLEN];
@@ -137,7 +138,7 @@ std::pair<int, peer> accept_client(int server_fd) {
     int client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &sin_size);
     if (client_fd == -1) {
         spdlog::error("Error: failed on client accept");
-        return {-1, peer()};
+        return {-1, peer_t()};
     }
 
     if (client_addr.ss_family == AF_INET) {
@@ -155,7 +156,7 @@ std::pair<int, peer> accept_client(int server_fd) {
 
     spdlog::debug("Accepted connection from {}:{}", ip_str, port);
 
-    return {client_fd, peer(ip_str, port)};
+    return {client_fd, peer_t(ip_str, port)};
 }
 
 int send_all(int sockfd, std::string bytes) {

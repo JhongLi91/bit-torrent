@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-std::vector<peer> tracker::get_peers(torrent &torrent) {
+std::vector<peer_t> tracker::get_peers(torrent &torrent) {
     // get host and port from torrent file and create http client
     auto [host, port] = torrent.get_hostname_and_port();
     http client(host, port);
@@ -41,20 +41,20 @@ std::vector<peer> tracker::get_peers(torrent &torrent) {
     return extract_peers(peers_buf);
 }
 
-std::vector<peer> extract_peers(buffer_t &buf) {
+std::vector<peer_t> extract_peers(buffer_t &buf) {
     if (buf.size() % 6 != 0) {
         spdlog::error("Peers blob size not modulo 6: {}", buf.size());
         return {};
     }
 
-    std::vector<peer> peers;
+    std::vector<peer_t> peers;
     for (uint32_t i = 0; i < buf.size(); i += 6) {
-        uint8_t oct1 = parser::buffer::get1B(buf, i);
-        uint8_t oct2 = parser::buffer::get1B(buf, i + 1);
-        uint8_t oct3 = parser::buffer::get1B(buf, i + 2);
-        uint8_t oct4 = parser::buffer::get1B(buf, i + 3);
+        uint8_t oct1 = ::get1B(buf, i);
+        uint8_t oct2 = ::get1B(buf, i + 1);
+        uint8_t oct3 = ::get1B(buf, i + 2);
+        uint8_t oct4 = ::get1B(buf, i + 3);
 
-        uint16_t port = parser::buffer::get2B(buf, i + 4);
+        uint16_t port = ::get2B(buf, i + 4);
 
         std::string ip = fmt::format("{}.{}.{}.{}", oct1, oct2, oct3, oct4);
         peers.emplace_back(ip, port);

@@ -38,9 +38,9 @@ buffer_t message::build_bitfield(const buffer_t &bitfield) {
     uint32_t payload_len = 1 + bitfield.size(); // ID (1) + bitfield (N)
     buffer_t msg(4 + payload_len);              // 4 bytes for payload_len
 
-    parser::buffer::set4B(htonl(payload_len), msg, 0);               // payload_len
-    parser::buffer::set1B(BITFIELD, msg, 4);                         // id
-    parser::buffer::setNB(msg, bitfield.data(), bitfield.size(), 5); // bitfield
+    ::set4B(htonl(payload_len), msg, 0);               // payload_len
+    ::set1B(BITFIELD, msg, 4);                         // id
+    ::setNB(msg, bitfield.data(), bitfield.size(), 5); // bitfield
 
     return msg;
 }
@@ -48,11 +48,11 @@ buffer_t message::build_bitfield(const buffer_t &bitfield) {
 buffer_t message::build_request(uint32_t idx, uint32_t begin, uint32_t len, uint8_t type) {
     buffer_t msg(4 + 1 + 12); //  payload_len (4) + ID (1) + idx (4), begin (4), len (4)
 
-    parser::buffer::set4B(htonl(13), msg, 0);    // payload_len
-    parser::buffer::set1B(type, msg, 4);         // id
-    parser::buffer::set4B(htonl(idx), msg, 5);   // idx
-    parser::buffer::set4B(htonl(begin), msg, 9); // begin
-    parser::buffer::set4B(htonl(len), msg, 13);  // req len
+    ::set4B(htonl(13), msg, 0);    // payload_len
+    ::set1B(type, msg, 4);         // id
+    ::set4B(htonl(idx), msg, 5);   // idx
+    ::set4B(htonl(begin), msg, 9); // begin
+    ::set4B(htonl(len), msg, 13);  // req len
 
     return msg;
 }
@@ -61,13 +61,13 @@ buffer_t message::build_piece(uint32_t idx, uint32_t begin, buffer_t &block) {
     uint32_t payload_len = 1 + 8 + block.size(); // ID (1) + idx (4) + begin (4) + block (N)
     buffer_t msg(4 + payload_len);
 
-    parser::buffer::set4B(htonl(payload_len), msg, 0); // payload_len
-    parser::buffer::set1B(PIECE, msg, 4);              // id
-    parser::buffer::set4B(htonl(idx), msg, 5);         // idx
-    parser::buffer::set4B(htonl(begin), msg, 9);       // begin
+    ::set4B(htonl(payload_len), msg, 0); // payload_len
+    ::set1B(PIECE, msg, 4);              // id
+    ::set4B(htonl(idx), msg, 5);         // idx
+    ::set4B(htonl(begin), msg, 9);       // begin
 
     // TODO:: terribly ineffienct with copy
-    parser::buffer::setNB(msg, block.data(), block.size(), 13); // data
+    ::setNB(msg, block.data(), block.size(), 13); // data
 
     return msg;
 }

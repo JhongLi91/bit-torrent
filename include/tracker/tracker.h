@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace tracker {
-std::vector<peer> get_peers(torrent &torrent);
+std::vector<peer_t> get_peers(torrent &torrent);
 }; // namespace tracker
 
-std::vector<peer> extract_peers(buffer_t &buf);
+std::vector<peer_t> extract_peers(buffer_t &buf);
