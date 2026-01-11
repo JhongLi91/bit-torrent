@@ -16,15 +16,15 @@ torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     std::string data = loadFile(path);
 
     // decode and extract root
-    auto root = parsing::bencoding::decode(data);
-    auto &rootMap = std::get<parsing::bencoding::Bmap>(root.val);
+    auto root = bencoding::decode(data);
+    auto &rootMap = std::get<bencoding::Bmap>(root.val);
     if (rootMap.find("announce") == end(rootMap) || rootMap.find("info") == end(rootMap)) {
         spdlog::error("Error: Invalid torrent file");
         exit(1);
     }
 
     // extract info dictionary
-    auto &info = std::get<parsing::bencoding::Bmap>(rootMap["info"].val);
+    auto &info = std::get<bencoding::Bmap>(rootMap["info"].val);
 
     // populate data
     length = std::get<ll>(info["length"].val);
@@ -34,7 +34,7 @@ torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     announce_url = std::get<std::string>(rootMap["announce"].val);
 
     // re-encode info dictionary to get info hash
-    std::string infoBytes = parsing::bencoding::encode(rootMap["info"]);
+    std::string infoBytes = bencoding::encode(rootMap["info"]);
     info_hash = sha1(infoBytes);
 
     // create a listener socket

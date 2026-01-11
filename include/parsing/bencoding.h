@@ -9,7 +9,7 @@
 
 using ll = long long;
 
-namespace parsing::bencoding {
+namespace bencoding {
 
 struct Bitem;
 
@@ -42,4 +42,4 @@ struct Bitem {
 Bitem decode(std::string_view data);
 std::string encode(const Bitem &bitem);
 
-}; // namespace parsing::bencoding
+}; // namespace bencoding

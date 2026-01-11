@@ -31,8 +31,8 @@ std::vector<peer_t> tracker::get_peers(torrent &torrent) {
 
     // decoding bencoded data
     std::string_view view(reinterpret_cast<const char *>(data.data()), data.size());
-    auto root = parsing::bencoding::decode(view);
-    auto &dict = std::get<parsing::bencoding::Bmap>(root.val);
+    auto root = bencoding::decode(view);
+    auto &dict = std::get<bencoding::Bmap>(root.val);
 
     // get raw peer bytes
     const std::string &peers_blob = std::get<std::string>(dict["peers"].val);

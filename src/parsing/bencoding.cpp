@@ -2,7 +2,7 @@
 #include <cctype>
 #include <stdexcept>
 
-namespace parsing::bencoding {
+namespace bencoding {
 
 // - private helpers
 ll get_number(std::string_view data, size_t start, size_t end);
@@ -138,4 +138,4 @@ std::string encode(const Bitem &bitem) {
         bitem.val);
 }
 
-} // namespace parsing::bencoding
+} // namespace bencoding
