@@ -41,6 +41,15 @@ torrent::torrent(const std::string &path) : peer_id(generate_peer_id()) {
     auto [fd, _port] = make_server_socket();
     server_fd = fd;
     port = _port;
+
+    // debug prints
+    print_torrent_file();
+}
+
+void torrent::print_torrent_file() {
+    spdlog::debug("Extracted torrent_info: \nannounce_url: {}\nfilename: {}\nlength: "
+                  "{}\npiece_length: {}\ninfo_hash: {}",
+                  announce_url, file_name, length, piece_length, info_hash);
 }
 
 bool torrent::verify_piece(const std::string &hash, uint32_t piece_idx) {

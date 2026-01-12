@@ -22,6 +22,7 @@ class torrent {
   private:
     std::string loadFile(const std::string &path);
     std::string sha1(const std::string &input);
+    void print_torrent_file();
 
   public:
     int server_fd;
