@@ -2,6 +2,7 @@
 
 #include "parsing/buffer.h"
 #include <cstdint>
+#include <random>
 #include <vector>
 
 class progress_t {
@@ -13,6 +14,9 @@ class progress_t {
     int next_piece_to_request(buffer_t &peer_bitfield);
     void update_have(uint32_t piece);
     void update_receive(uint32_t piece);
+
+  private:
+    static std::random_device rd;
 
   public:
     uint32_t total;
